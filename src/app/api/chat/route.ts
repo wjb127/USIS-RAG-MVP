@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
-import { createEmbedding, generateResponse } from '@/lib/openai'
+import { generateResponse } from '@/lib/openai'
 
 interface DocumentResult {
   id: number
@@ -8,6 +7,15 @@ interface DocumentResult {
   content: string
   chunk_index: number
   similarity: number
+  created_at: string
+}
+
+interface SearchResponse {
+  results: DocumentResult[]
+  query: string
+  match_threshold: number
+  match_count: number
+  method: string
 }
 
 export async function POST(request: NextRequest) {
@@ -18,47 +26,79 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '메시지가 필요합니다.' }, { status: 400 })
     }
 
-    // 사용자 질문을 임베딩으로 변환
-    const queryEmbedding = await createEmbedding(message)
+    console.log('💬 채팅 요청:', message)
+
+    // 새로운 문서 검색 API 호출
+    const searchResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/search-documents`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: message,
+        match_threshold: 0.3,
+        match_count: 10
+      })
+    })
+
+    if (!searchResponse.ok) {
+      throw new Error('문서 검색 API 호출 실패')
+    }
+
+    const searchData: SearchResponse = await searchResponse.json()
     
-    // 벡터 유사도 검색으로 관련 문서 찾기
-    const { data: similarDocs, error } = await supabaseAdmin.rpc('match_rag_documents', {
-      query_embedding: queryEmbedding,
-      match_threshold: 0.7,
-      match_count: 5
+    console.log('🔍 검색 결과:', {
+      method: searchData.method,
+      total_results: searchData.results.length,
+      query: searchData.query
     })
     
-    if (error) {
-      console.error('문서 검색 오류:', error)
-      return NextResponse.json({ error: '문서 검색 중 오류가 발생했습니다.' }, { status: 500 })
-    }
-    
-    // 검색된 문서들을 컨텍스트로 구성
-    const context = similarDocs
-      ?.map((doc: DocumentResult) => doc.content)
-      .join('\n\n') || ''
+    // 검색 결과로부터 컨텍스트 생성
+    const context = searchData.results.map(doc => doc.content).join('\n\n')
     
     // GPT에게 질문과 컨텍스트를 전달하여 답변 생성
-    const prompt = `
-다음은 경영실적 관련 문서들입니다:
+    let prompt = ''
+    
+    if (context.length > 0) {
+      prompt = `
+다음은 업로드된 경영실적 관련 문서들입니다:
 
 ${context}
 
 사용자 질문: ${message}
 
-위의 문서 정보를 바탕으로 사용자의 질문에 대해 정확하고 상세한 답변을 제공해주세요. 만약 문서에 관련 정보가 없다면, 그렇다고 명시해주세요.
+위의 문서 정보를 바탕으로 사용자의 질문에 대해 한국어로 정확하고 상세한 답변을 제공해주세요. 구체적인 수치나 데이터가 있다면 그것을 인용해서 답변해주세요.
 `
+    } else {
+      // 문서가 없는 경우에도 기본 답변 제공
+      prompt = `
+사용자 질문: ${message}
+
+업로드된 문서에서 관련 정보를 찾을 수 없습니다. 하지만 일반적인 경영실적 분석에 대한 답변을 제공해주세요. 먼저 관련 문서를 업로드하라고 안내해주세요.
+`
+    }
+    
+    console.log('🤖 GPT 프롬프트 길이:', prompt.length, '문자')
     
     const answer = await generateResponse(prompt)
     
+    console.log('✅ GPT 답변 생성 완료')
+    
     return NextResponse.json({ 
       answer,
-      sources: similarDocs?.length || 0,
-      context_used: context.length > 0
+      sources: searchData.results.length,
+      context_used: context.length > 0,
+      search_method: searchData.method,
+      search_results: searchData.results.map(doc => ({
+        id: doc.id,
+        filename: doc.filename,
+        similarity: doc.similarity,
+        content_preview: doc.content?.substring(0, 100) + '...'
+      }))
     })
     
   } catch (error) {
-    console.error('채팅 오류:', error)
+    console.error('💥 채팅 오류:', error)
     return NextResponse.json({ error: '채팅 중 오류가 발생했습니다.' }, { status: 500 })
   }
 } 

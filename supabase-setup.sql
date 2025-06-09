@@ -43,6 +43,27 @@ as $$
   limit match_count;
 $$;
 
+-- 임베딩과 함께 문서 삽입하는 함수 생성
+create or replace function insert_document_with_embedding (
+  p_filename text,
+  p_content text,
+  p_chunk_index integer,
+  p_embedding float[]
+)
+returns json
+language plpgsql
+as $$
+declare
+  result_record rag_documents%rowtype;
+begin
+  insert into rag_documents (filename, content, chunk_index, embedding, created_at)
+  values (p_filename, p_content, p_chunk_index, p_embedding::vector, now())
+  returning * into result_record;
+  
+  return row_to_json(result_record);
+end;
+$$;
+
 -- RLS (Row Level Security) 정책 설정 (선택사항)
 -- alter table rag_documents enable row level security;
 
