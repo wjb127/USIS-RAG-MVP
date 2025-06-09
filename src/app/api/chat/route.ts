@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { createEmbedding, generateResponse } from '@/lib/openai'
 
+interface DocumentResult {
+  id: number
+  filename: string
+  content: string
+  chunk_index: number
+  similarity: number
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { message } = await request.json()
@@ -27,8 +35,8 @@ export async function POST(request: NextRequest) {
     
     // 검색된 문서들을 컨텍스트로 구성
     const context = similarDocs
-      .map((doc: any) => doc.content)
-      .join('\n\n')
+      ?.map((doc: DocumentResult) => doc.content)
+      .join('\n\n') || ''
     
     // GPT에게 질문과 컨텍스트를 전달하여 답변 생성
     const prompt = `
@@ -45,7 +53,7 @@ ${context}
     
     return NextResponse.json({ 
       answer,
-      sources: similarDocs.length,
+      sources: similarDocs?.length || 0,
       context_used: context.length > 0
     })
     
