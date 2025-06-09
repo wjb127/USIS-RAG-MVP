@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     console.log('✅ 문서 조회 성공:', documents.length, '개, 총', totalCount, '개')
     
     // 임베딩 타입 분석
-    const documentsWithTypes = documents.map((doc: any) => {
+            const documentsWithTypes = documents.map((doc: { id: number; filename: string; content: string; chunk_index: number; created_at: string; embedding?: unknown }) => {
       let embedding_type = 'unknown'
       let embedding_dimension = null
       

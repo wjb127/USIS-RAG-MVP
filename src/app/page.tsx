@@ -130,22 +130,22 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">💡 추천 질문</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors">
-                    <p className="text-sm text-gray-700">"매출이 가장 높은 회사는 어디인가요?"</p>
+                    <p className="text-sm text-gray-700">&quot;매출이 가장 높은 회사는 어디인가요?&quot;</p>
                   </div>
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors">
-                    <p className="text-sm text-gray-700">"평균 영업이익률을 알려주세요"</p>
+                                          <p className="text-sm text-gray-700">&quot;평균 영업이익률을 알려주세요&quot;</p>
                   </div>
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors">
-                    <p className="text-sm text-gray-700">"IT 업종 회사들의 성장률은?"</p>
+                                          <p className="text-sm text-gray-700">&quot;IT 업종 회사들의 성장률은?&quot;</p>
                   </div>
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors">
-                    <p className="text-sm text-gray-700">"R&D 투자를 가장 많이 하는 회사는?"</p>
+                                          <p className="text-sm text-gray-700">&quot;R&D 투자를 가장 많이 하는 회사는?&quot;</p>
                   </div>
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors">
-                    <p className="text-sm text-gray-700">"수익성이 가장 좋은 회사는?"</p>
+                                          <p className="text-sm text-gray-700">&quot;수익성이 가장 좋은 회사는?&quot;</p>
                   </div>
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors">
-                    <p className="text-sm text-gray-700">"성장률과 수익성을 종합적으로 분석해줘"</p>
+                                          <p className="text-sm text-gray-700">&quot;성장률과 수익성을 종합적으로 분석해줘&quot;</p>
                   </div>
                 </div>
               </div>

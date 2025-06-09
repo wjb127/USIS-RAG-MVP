@@ -180,9 +180,9 @@ export default function FloatingChatBot() {
                 <ChatBubbleLeftRightIcon className="mx-auto h-6 w-6 text-gray-300 mb-2" />
                 <p className="text-xs">경영실적 데이터를 분석해드립니다</p>
                 <div className="mt-3 text-xs text-gray-400 space-y-1">
-                  <p>💡 "매출이 높은 회사는?"</p>
-                  <p>💡 "평균 영업이익률은?"</p>
-                  <p>💡 "성장률이 높은 업종은?"</p>
+                                <p>💡 &quot;매출이 높은 회사는?&quot;</p>
+              <p>💡 &quot;평균 영업이익률은?&quot;</p>
+              <p>💡 &quot;성장률이 높은 업종은?&quot;</p>
                 </div>
               </div>
             ) : (

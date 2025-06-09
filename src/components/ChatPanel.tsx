@@ -154,9 +154,9 @@ export default function ChatPanel() {
             <ChatBubbleLeftRightIcon className="mx-auto h-8 w-8 text-gray-300 mb-3" />
             <p className="text-sm">경영실적 데이터를 분석해드립니다</p>
             <div className="mt-4 text-xs text-gray-400 space-y-1">
-              <p>💡 "매출이 가장 높은 회사는?"</p>
-              <p>💡 "평균 영업이익률은 얼마인가요?"</p>
-              <p>💡 "성장률이 높은 업종을 알려주세요"</p>
+              <p>💡 &quot;매출이 가장 높은 회사는?&quot;</p>
+              <p>💡 &quot;평균 영업이익률은 얼마인가요?&quot;</p>
+              <p>💡 &quot;성장률이 높은 업종을 알려주세요&quot;</p>
             </div>
           </div>
         ) : (

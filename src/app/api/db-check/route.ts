@@ -7,7 +7,7 @@ export async function GET() {
   try {
     console.log('🔍 데이터베이스 상태 확인 시작...')
     
-    const checks: any = {}
+    const checks: Record<string, unknown> = {}
 
     // 1. 테이블 존재 확인 (PostgreSQL 시스템 테이블 조회)
     try {
@@ -88,8 +88,8 @@ export async function GET() {
       if (functionsResponse.ok) {
         const functionsData = await functionsResponse.json()
         checks.rpc_functions = {
-          insert_function: functionsData.some((f: any) => f.proname === 'insert_document_with_embedding'),
-          search_function: functionsData.some((f: any) => f.proname === 'match_rag_documents'),
+          insert_function: functionsData.some((f: { proname: string }) => f.proname === 'insert_document_with_embedding'),
+          search_function: functionsData.some((f: { proname: string }) => f.proname === 'match_rag_documents'),
           total_found: functionsData.length
         }
         console.log('✅ RPC 함수 확인:', checks.rpc_functions)
@@ -146,7 +146,7 @@ export async function GET() {
         checks.sample_data = {
           total_documents: parseInt(totalCount),
           sample_count: sampleData.length,
-          samples: sampleData.map((doc: any) => ({
+          samples: sampleData.map((doc: { id: number; filename: string; embedding?: unknown; content: string; created_at: string }) => ({
             id: doc.id,
             filename: doc.filename,
             embedding_type: doc.embedding?.toString().startsWith('[') ? 'vector' : 'text',

@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     // 2. REST API로 벡터 유사도 검색 (여러 임계값 테스트)
     const thresholds = [0.1, 0.3, 0.5, 0.7]
-    const results: any = {}
+    const results: Record<string, unknown> = {}
 
     for (const threshold of thresholds) {
       console.log(`🎯 임계값 ${threshold} 테스트...`)
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
           const searchResults = await searchResponse.json()
           results[`threshold_${threshold}`] = {
             count: searchResults.length,
-            results: searchResults.slice(0, 3).map((doc: any) => ({
+            results: searchResults.slice(0, 3).map((doc: { id: number; filename: string; similarity: number; content?: string }) => ({
               id: doc.id,
               filename: doc.filename,
               similarity: doc.similarity,
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
 
       if (allDocsResponse.ok) {
         const allDocs = await allDocsResponse.json()
-        results.reference_documents = allDocs.map((doc: any) => ({
+        results.reference_documents = allDocs.map((doc: { id: number; filename: string; embedding?: unknown; content?: string }) => ({
           id: doc.id,
           filename: doc.filename,
           embedding_type: doc.embedding?.toString().startsWith('[') ? 'vector' : 'text',

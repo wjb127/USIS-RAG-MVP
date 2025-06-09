@@ -63,7 +63,9 @@ export default function DocumentManager() {
       console.log('✅ 문서 조회 응답:', {
         documents_count: data.documents?.length || 0,
         total_count: data.total_count,
-        method: data.method
+        method: data.method,
+        sample_filenames: data.documents?.slice(0, 3).map(d => d.filename),
+        response_structure: Object.keys(data)
       })
 
       if (data.documents) {
@@ -140,7 +142,7 @@ export default function DocumentManager() {
       console.log('✅ 파일 삭제 성공:', data)
       
       if (data.success) {
-        alert(`파일 "${filename}"의 모든 청크가 삭제되었습니다.`)
+        alert(`파일 &quot;${filename}&quot;의 모든 청크가 삭제되었습니다.`)
         setSelectedFilename('') // 선택 초기화
         fetchDocuments(1, '', searchTerm) // 전체 목록으로 돌아가기
       } else {
@@ -207,6 +209,9 @@ export default function DocumentManager() {
         <div className="text-sm text-gray-600 space-y-1">
           <div>표시: {filteredDocuments.length}개 청크</div>
           <div>전체: {totalCount}개 문서</div>
+          <div className="text-red-600 font-mono text-xs">
+            DEBUG: documents.length={documents.length}, isLoading={isLoading.toString()}
+          </div>
         </div>
       </div>
 
@@ -265,7 +270,7 @@ export default function DocumentManager() {
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center gap-2"
             >
               <TrashIcon className="h-4 w-4" />
-              "{selectedFilename}" 전체 삭제
+              &quot;{selectedFilename}&quot; 전체 삭제
             </button>
           </div>
         )}
@@ -284,7 +289,7 @@ export default function DocumentManager() {
             <p>조건에 맞는 문서가 없습니다.</p>
             {searchTerm && (
               <p className="text-sm mt-2">
-                검색어: "{searchTerm}" 
+                검색어: &quot;{searchTerm}&quot; 
                 <button 
                   onClick={() => {
                     setSearchTerm('')

@@ -1,7 +1,7 @@
 'use client'
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
-import { ArrowUpIcon, ArrowDownIcon, ChartBarIcon, CurrencyDollarIcon, UsersIcon, ArrowTrendingUpIcon } from '@heroicons/react/24/outline'
+import { ArrowUpIcon, ChartBarIcon, CurrencyDollarIcon, UsersIcon, ArrowTrendingUpIcon } from '@heroicons/react/24/outline'
 
 // 샘플 데이터
 const salesData = [

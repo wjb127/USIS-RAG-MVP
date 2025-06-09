@@ -32,8 +32,8 @@ export async function GET() {
     const stats = {
       total_documents: parseInt(totalCount),
       documents_fetched: documents.length,
-      unique_filenames: [...new Set(documents.map((doc: any) => doc.filename))],
-      embedding_types: documents.reduce((acc: any, doc: any) => {
+      unique_filenames: [...new Set(documents.map((doc: { filename: string }) => doc.filename))],
+      embedding_types: documents.reduce((acc: Record<string, number>, doc: { embedding?: unknown }) => {
         const embeddingStr = doc.embedding?.toString() || ''
         let type = 'none'
         
@@ -46,7 +46,7 @@ export async function GET() {
         acc[type] = (acc[type] || 0) + 1
         return acc
       }, {}),
-      sample_documents: documents.slice(0, 3).map((doc: any) => ({
+      sample_documents: documents.slice(0, 3).map((doc: { id: number; filename: string; content?: string; embedding?: unknown; created_at: string }) => ({
         id: doc.id,
         filename: doc.filename,
         content_preview: doc.content?.substring(0, 100) + '...',

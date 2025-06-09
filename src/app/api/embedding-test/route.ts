@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createEmbedding } from '@/lib/openai'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const testText = "ABC 회사 2023년 매출 1200억원"
     

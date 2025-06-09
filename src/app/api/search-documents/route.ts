@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
           
           if (textResults.length > 0) {
             // 유사도 점수 추가 (키워드 매칭 기반)
-            const resultsWithSimilarity = textResults.map((doc: any, index: number) => ({
+            const resultsWithSimilarity = textResults.map((doc: { id: number; filename: string; content: string }, index: number) => ({
               ...doc,
               similarity: 0.7 - (index * 0.1) // 키워드 매칭 유사도 점수
             }))
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
         console.log('✅ 모든 문서 조회 성공:', allDocs.length, '개 결과')
         
         if (allDocs.length > 0) {
-          const resultsWithSimilarity = allDocs.map((doc: any, index: number) => ({
+          const resultsWithSimilarity = allDocs.map((doc: { id: number; filename: string; content: string }, index: number) => ({
             ...doc,
             similarity: 0.4 - (index * 0.05) // 낮은 유사도 점수
           }))
