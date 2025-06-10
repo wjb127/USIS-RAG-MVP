@@ -1,22 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateResponse } from '@/lib/openai'
+import { searchDocuments } from '@/lib/search'
 
-interface DocumentResult {
-  id: number
-  filename: string
-  content: string
-  chunk_index: number
-  similarity: number
-  created_at: string
-}
-
-interface SearchResponse {
-  results: DocumentResult[]
-  query: string
-  match_threshold: number
-  match_count: number
-  method: string
-}
+// searchDocuments 함수의 타입은 src/lib/search.ts에서 import됩니다
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,24 +14,8 @@ export async function POST(request: NextRequest) {
 
     console.log('💬 채팅 요청:', message)
 
-    // 새로운 문서 검색 API 호출
-    const searchResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/search-documents`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: message,
-        match_threshold: 0.3,
-        match_count: 10
-      })
-    })
-
-    if (!searchResponse.ok) {
-      throw new Error('문서 검색 API 호출 실패')
-    }
-
-    const searchData: SearchResponse = await searchResponse.json()
+    // 문서 검색 함수 직접 호출 (Vercel 내부 호출 문제 해결)
+    const searchData = await searchDocuments(message, 0.3, 10)
     
     console.log('🔍 검색 결과:', {
       method: searchData.method,
